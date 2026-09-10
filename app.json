@@ -1,0 +1,16 @@
+{
+  "name": "My App",
+  "description": "My Flows custom app",
+  "externalId": "my-app",
+  "versionTag": "0.0.1",
+  "infra": "appsApi",
+  "deployments": [
+    {
+      "org": "cog-farhan-dogfooding",
+      "project": "farhan-test",
+      "baseUrl": "https://bluefield.cognitedata.com",
+      "deployClientId": "",
+      "deploySecretName": "COG_FARHAN_DOGFOODING_FARHAN_TEST_BLUEFIELD"
+    }
+  ]
+}
