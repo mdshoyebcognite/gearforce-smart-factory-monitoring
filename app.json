@@ -1,8 +1,8 @@
 {
-  "name": "My App",
-  "description": "My Flows custom app",
-  "externalId": "my-app",
-  "versionTag": "0.0.1",
+  "name": "GearForce Smart Factory Monitoring",
+  "description": "Read-only monitoring and investigation for GearForce Manufacturing machine health",
+  "externalId": "Gear-box",
+  "versionTag": "0.0.2",
   "infra": "appsApi",
   "deployments": [
     {
