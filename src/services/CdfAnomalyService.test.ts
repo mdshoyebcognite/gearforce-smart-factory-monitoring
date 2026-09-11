@@ -1,7 +1,7 @@
-import type { CogniteClient } from '@cognite/sdk';
 import { describe, expect, it, vi } from 'vitest';
 
 import { CdfAnomalyService } from '@/services/CdfAnomalyService';
+import { createMockCogniteClient } from '@/testUtils/mockCogniteClient';
 
 describe(CdfAnomalyService.name, () => {
   it('reads latest completed call without invoking function', async () => {
@@ -28,10 +28,10 @@ describe(CdfAnomalyService.name, () => {
         },
       });
 
-    const client = {
+    const client = createMockCogniteClient({
       project: 'test-project',
       get,
-    } as unknown as CogniteClient;
+    });
 
     const service = new CdfAnomalyService(client);
     const report = await service.getLatestReport();
@@ -52,10 +52,10 @@ describe(CdfAnomalyService.name, () => {
         data: { items: [{ id: 1, status: 'Running', startTime: 3000 }] },
       });
 
-    const client = {
+    const client = createMockCogniteClient({
       project: 'test-project',
       get,
-    } as unknown as CogniteClient;
+    });
 
     const service = new CdfAnomalyService(client);
     const report = await service.getLatestReport();
@@ -63,10 +63,10 @@ describe(CdfAnomalyService.name, () => {
   });
 
   it('returns null when function not found', async () => {
-    const client = {
+    const client = createMockCogniteClient({
       project: 'test-project',
       get: vi.fn().mockResolvedValue({ data: { items: [] } }),
-    } as unknown as CogniteClient;
+    });
 
     const service = new CdfAnomalyService(client);
     const report = await service.getLatestReport();

@@ -1,16 +1,16 @@
-import type { CogniteClient } from '@cognite/sdk';
 import { describe, expect, it, vi } from 'vitest';
 
 import { mockCdfSensorNodes } from '@/__mocks__/gearforceFixtures';
 import { CdfSensorDataService } from '@/services/CdfSensorDataService';
+import { createMockCogniteClient } from '@/testUtils/mockCogniteClient';
 
 describe(CdfSensorDataService.name, () => {
   it('lists sensors for machine using relation', async () => {
-    const client = {
+    const client = createMockCogniteClient({
       instances: {
         list: vi.fn().mockResolvedValue({ items: mockCdfSensorNodes }),
       },
-    } as unknown as CogniteClient;
+    });
 
     const service = new CdfSensorDataService(client);
     const sensors = await service.listSensorsForMachine('gearforce.machine.L1_M1');
@@ -21,7 +21,7 @@ describe(CdfSensorDataService.name, () => {
 
   it('uses cache on subsequent listAllSensors calls', async () => {
     const list = vi.fn().mockResolvedValue({ items: mockCdfSensorNodes });
-    const client = { instances: { list } } as unknown as CogniteClient;
+    const client = createMockCogniteClient({ instances: { list } });
     const service = new CdfSensorDataService(client);
 
     await service.listAllSensors();
@@ -31,9 +31,9 @@ describe(CdfSensorDataService.name, () => {
   });
 
   it('returns null for unknown sensor', async () => {
-    const client = {
+    const client = createMockCogniteClient({
       instances: { list: vi.fn().mockResolvedValue({ items: mockCdfSensorNodes }) },
-    } as unknown as CogniteClient;
+    });
     const service = new CdfSensorDataService(client);
     expect(await service.getSensor('missing')).toBeNull();
   });

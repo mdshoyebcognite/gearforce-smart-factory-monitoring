@@ -2,7 +2,7 @@
   "name": "GearForce Smart Factory Monitoring",
   "description": "Read-only monitoring and investigation for GearForce Manufacturing machine health",
   "externalId": "Gear-box",
-  "versionTag": "0.0.2",
+  "versionTag": "1.0.0",
   "infra": "appsApi",
   "deployments": [
     {
