@@ -1,12 +1,12 @@
-import type { CogniteClient } from '@cognite/sdk';
 import { describe, expect, it, vi } from 'vitest';
 
 import { mockCdfMachineNodes } from '@/__mocks__/gearforceFixtures';
 import { CdfMachineDataService } from '@/services/CdfMachineDataService';
+import { createMockCogniteClient } from '@/testUtils/mockCogniteClient';
 
 describe(CdfMachineDataService.name, () => {
   it('loads factory overview from Machine_View nodes', async () => {
-    const client = {
+    const client = createMockCogniteClient({
       instances: {
         list: vi.fn().mockImplementation(({ sources }: { sources: Array<{ source: { externalId: string } }> }) => {
           const viewId = sources[0]?.source.externalId;
@@ -22,7 +22,7 @@ describe(CdfMachineDataService.name, () => {
           return Promise.resolve({ items: [] });
         }),
       },
-    } as unknown as CogniteClient;
+    });
 
     const service = new CdfMachineDataService(client);
     const overview = await service.getFactoryOverview();
@@ -32,11 +32,11 @@ describe(CdfMachineDataService.name, () => {
   });
 
   it('returns null for unknown machine', async () => {
-    const client = {
+    const client = createMockCogniteClient({
       instances: {
         list: vi.fn().mockResolvedValue({ items: [] }),
       },
-    } as unknown as CogniteClient;
+    });
 
     const service = new CdfMachineDataService(client);
     const machine = await service.getMachine('missing');

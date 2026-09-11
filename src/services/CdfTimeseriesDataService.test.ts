@@ -1,11 +1,11 @@
-import type { CogniteClient } from '@cognite/sdk';
 import { describe, expect, it, vi } from 'vitest';
 
 import { CdfTimeseriesDataService } from '@/services/CdfTimeseriesDataService';
+import { createMockCogniteClient } from '@/testUtils/mockCogniteClient';
 
 describe(CdfTimeseriesDataService.name, () => {
   it('retrieves latest reading from classic timeseries', async () => {
-    const client = {
+    const client = createMockCogniteClient({
       datapoints: {
         retrieveLatest: vi.fn().mockResolvedValue([
           {
@@ -14,7 +14,7 @@ describe(CdfTimeseriesDataService.name, () => {
           },
         ]),
       },
-    } as unknown as CogniteClient;
+    });
 
     const service = new CdfTimeseriesDataService(client);
     const reading = await service.getLatestReading('gearforce.L1.M1.temperature', '°C');
@@ -34,9 +34,9 @@ describe(CdfTimeseriesDataService.name, () => {
       },
     ]);
 
-    const client = {
+    const client = createMockCogniteClient({
       datapoints: { retrieve },
-    } as unknown as CogniteClient;
+    });
 
     const service = new CdfTimeseriesDataService(client);
     const windowMs = 3600_000;
@@ -53,7 +53,7 @@ describe(CdfTimeseriesDataService.name, () => {
   });
 
   it('converts Date timestamps to epoch milliseconds', async () => {
-    const client = {
+    const client = createMockCogniteClient({
       datapoints: {
         retrieve: vi.fn().mockResolvedValue([
           {
@@ -65,7 +65,7 @@ describe(CdfTimeseriesDataService.name, () => {
           },
         ]),
       },
-    } as unknown as CogniteClient;
+    });
 
     const service = new CdfTimeseriesDataService(client);
     const trend = await service.getTrend('ts', '°C', 3600000);
@@ -73,13 +73,13 @@ describe(CdfTimeseriesDataService.name, () => {
   });
 
   it('returns null when latest value is not numeric', async () => {
-    const client = {
+    const client = createMockCogniteClient({
       datapoints: {
         retrieveLatest: vi.fn().mockResolvedValue([
           { externalId: 'ts', datapoints: [{ timestamp: 1, value: 'bad' }] },
         ]),
       },
-    } as unknown as CogniteClient;
+    });
 
     const service = new CdfTimeseriesDataService(client);
     expect(await service.getLatestReading('ts', '°C')).toBeNull();
